@@ -1,0 +1,31 @@
+# Patient Bed Exterior
+
+/gate/world/daughters/name bed
+/gate/world/daughters/insert cylinder
+/gate/bed/geometry/setRmax 439 mm
+/gate/bed/geometry/setRmin 406 mm
+/gate/bed/geometry/setHeight 200.0 cm
+/gate/bed/geometry/setPhiStart 0 deg
+/gate/bed/geometry/setDeltaPhi 70 deg
+/gate/bed/placement/setRotationAxis 0 0 1
+/gate/bed/placement/setRotationAngle -125 deg
+/gate/bed/placement/setTranslation 0.0 25 0.0 cm
+/gate/bed/setMaterial CarbonFiber
+/gate/bed/vis/setColor white
+/gate/bed/vis/forceSolid
+/gate/bed/vis/setVisible 1
+
+# Patient Bed Interior
+/gate/bed/daughters/name bedin
+/gate/bed/daughters/insert cylinder
+/gate/bedin/geometry/setRmax 436.5 mm
+/gate/bedin/geometry/setRmin 408.5 mm
+/gate/bedin/geometry/setHeight 200.0 cm
+/gate/bedin/geometry/setPhiStart 0 deg
+/gate/bedin/geometry/setDeltaPhi 69 deg
+/gate/bedin/placement/setRotationAxis 0 0 1
+/gate/bedin/placement/setRotationAngle 0.5 deg
+/gate/bedin/setMaterial Air
+/gate/bedin/vis/setColor red
+/gate/bedin/vis/forceSolid
+/gate/bedin/vis/setVisible 1

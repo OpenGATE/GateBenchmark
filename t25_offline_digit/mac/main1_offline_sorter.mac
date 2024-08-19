@@ -1,0 +1,19 @@
+
+# Geometry is needed to identify layer with volumeID of hits and to perform operations with pulses
+/gate/geometry/setMaterialDatabase data/GateMaterials_pet.db
+/control/execute  mac/PET_CylindricalPET_geom.mac
+
+
+/gate/digitizer/Coincidences/setWindow 10. ns
+
+# There may be problems since by default in PET there is this minSectorDifference.
+# I do not know how this is read offline.
+# Sorter with CC flag. I should put the flag outside as a parameter for PET
+# I have the double of coincidences because I do not write single1 and single 2
+# parameters but all together with the identifier for coincidenceID.
+# This is how was done for CC. I could use RootDefs instead of CCDefs to keep same
+# thing as for coincidences inside Gate
+
+
+# INITIALIZE is needed to recover volumeID from hits using DetectorConstruction
+/gate/run/initialize

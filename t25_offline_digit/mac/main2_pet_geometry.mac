@@ -1,0 +1,201 @@
+
+#.................... DEFINING THE SCANNER GEOMETRY BASIC COMPONENTS
+
+# MOTHER VOLUME
+/gate/world/geometry/setXLength 300. cm
+/gate/world/geometry/setYLength 300. cm
+/gate/world/geometry/setZLength 300. cm
+/gate/world/setMaterial Air
+/gate/world/vis/setVisible 0
+/gate/world/vis/forceWireframe
+
+# CYLINDRICAL STRUCTURE
+/gate/world/daughters/name cylindricalPET
+/gate/world/daughters/insert cylinder
+/gate/cylindricalPET/placement/setTranslation 0.0 0.0 0.0 cm
+/gate/cylindricalPET/setMaterial Air
+/gate/cylindricalPET/geometry/setRmax  500.0 mm
+/gate/cylindricalPET/geometry/setRmin  360.0 mm 
+/gate/cylindricalPET/geometry/setHeight 164.0 mm
+/gate/cylindricalPET/vis/forceWireframe
+/gate/cylindricalPET/vis/setColor yellow
+/gate/cylindricalPET/vis/setVisible 0
+
+# MODULE (each module has 4x5 stacks)
+/gate/cylindricalPET/daughters/name module
+/gate/cylindricalPET/daughters/insert box
+/gate/module/placement/setTranslation 391.5 0 0 mm
+/gate/module/geometry/setXLength 19 mm
+/gate/module/geometry/setYLength 131.4 mm 
+/gate/module/geometry/setZLength 164.0 mm
+/gate/module/setMaterial ABS
+/gate/module/vis/setColor blue
+/gate/module/vis/forceWireframe
+/gate/module/vis/setVisible 1
+
+# STACK
+/gate/module/daughters/name stack
+/gate/module/daughters/insert box
+/gate/stack/placement/setTranslation 0.0 0.0 0.0 mm
+/gate/stack/geometry/setXLength 19 mm
+/gate/stack/geometry/setYLength 32.6 mm
+/gate/stack/geometry/setZLength 32.6 mm
+/gate/stack/setMaterial Air
+/gate/stack/vis/setColor green
+/gate/stack/vis/setVisible 0
+/gate/stack/vis/forceWireframe
+
+#       DIE
+/gate/stack/daughters/name die
+/gate/stack/daughters/insert box
+/gate/die/placement/setTranslation 0.0 0.0 0.0 mm
+/gate/die/geometry/setXLength 19 mm
+/gate/die/geometry/setYLength 8.0 mm
+/gate/die/geometry/setZLength 8.0 mm
+/gate/die/setMaterial Air
+/gate/die/vis/setColor red
+/gate/die/vis/setVisible 0
+/gate/die/vis/forceWireframe
+
+# CRYSTAL
+/gate/die/daughters/name crystal
+/gate/die/daughters/insert box
+/gate/crystal/placement/setTranslation 0.0 0.0 0.0 mm
+/gate/crystal/geometry/setXLength 19 mm
+/gate/crystal/geometry/setYLength 4.0 mm
+/gate/crystal/geometry/setZLength 4.0 mm
+/gate/crystal/setMaterial LYSO
+/gate/crystal/vis/setColor cyan
+/gate/crystal/vis/forceSolid
+/gate/crystal/vis/setVisible 0
+
+# FOR VISUALIZATION PURPOSES ONLY
+# SiPMs HOUSING
+/gate/cylindricalPET/daughters/name housing
+/gate/cylindricalPET/daughters/insert box
+/gate/housing/placement/setTranslation 408 0 0 mm
+/gate/housing/geometry/setXLength 1 mm
+/gate/housing/geometry/setYLength 131.0 mm 
+/gate/housing/geometry/setZLength 164.0 mm
+/gate/housing/setMaterial Air
+/gate/housing/vis/setColor blue
+/gate/housing/vis/forceSolid
+/gate/housing/vis/setVisible 0
+
+# SiPMs UNITS
+/gate/housing/daughters/name sipms
+/gate/housing/daughters/insert box
+/gate/sipms/placement/setTranslation 0.0 0.0 0.0 mm
+/gate/sipms/geometry/setXLength 1 mm
+/gate/sipms/geometry/setYLength 32.6 mm
+/gate/sipms/geometry/setZLength 32.6 mm
+/gate/sipms/setMaterial Air
+/gate/sipms/vis/setColor red
+/gate/sipms/vis/setVisible 0
+/gate/sipms/vis/forceWireframe
+
+/gate/cylindricalPET/daughters/name coolingplate
+/gate/cylindricalPET/daughters/insert box
+/gate/coolingplate/placement/setTranslation 430.0 0 0 mm
+/gate/coolingplate/geometry/setXLength 30 mm
+/gate/coolingplate/geometry/setYLength 130.2 mm
+/gate/coolingplate/geometry/setZLength 164.0 mm
+/gate/coolingplate/setMaterial Copper
+/gate/coolingplate/vis/setColor green
+/gate/coolingplate/vis/forceSolid
+/gate/coolingplate/vis/setVisible 0
+
+# BUILDING UP THE SCANNER GEOMETRY
+
+# REPEAT CRYSTAL TO GET A 2x2 SiPM (Die)
+/gate/crystal/repeaters/insert cubicArray
+/gate/crystal/cubicArray/setRepeatNumberX 1
+/gate/crystal/cubicArray/setRepeatNumberY 2
+/gate/crystal/cubicArray/setRepeatNumberZ 2
+/gate/crystal/cubicArray/setRepeatVector 19 4.0 4.0 mm
+
+# REPEAT DIE TO GET A 8x8 ARRAY
+/gate/die/repeaters/insert cubicArray
+/gate/die/cubicArray/setRepeatNumberX 1
+/gate/die/cubicArray/setRepeatNumberY 4
+/gate/die/cubicArray/setRepeatNumberZ 4
+/gate/die/cubicArray/setRepeatVector 19 8.0 8.0 mm
+
+# REPEAT STACK TO GET A MODULE WITH 4x5 STACKS
+/gate/stack/repeaters/insert cubicArray
+/gate/stack/cubicArray/setRepeatNumberY 4
+/gate/stack/cubicArray/setRepeatNumberZ 5
+/gate/stack/cubicArray/setRepeatVector 0. 32.85 32.85 mm
+
+# REPEAT MODULE TO GET A RING WITH 18 MODULES
+/gate/module/repeaters/insert ring
+/gate/module/ring/setFirstAngle 190 deg
+/gate/module/ring/setRepeatNumber 18
+
+# JUST FOR VISUALIZATION PURPOSES
+# REPEAT SiPMs WITHIN the HOUSING
+/gate/sipms/repeaters/insert cubicArray
+/gate/sipms/cubicArray/setRepeatNumberY 4
+/gate/sipms/cubicArray/setRepeatNumberZ 5
+/gate/sipms/cubicArray/setRepeatVector 0. 32.8 32.8 mm
+
+# REPEAT THE HOUSING
+/gate/housing/repeaters/insert ring
+/gate/housing/ring/setFirstAngle 190 deg
+/gate/housing/ring/setRepeatNumber 18
+
+/gate/coolingplate/repeaters/insert ring
+/gate/coolingplate/ring/setFirstAngle 190 deg
+/gate/coolingplate/ring/setRepeatNumber 18
+
+
+# END SHIELDING 1
+/gate/world/daughters/name endshielding1
+/gate/world/daughters/insert cylinder
+/gate/endshielding1/placement/setTranslation 0.0 0.0 95.0 mm
+/gate/endshielding1/geometry/setRmax   410.0 mm
+/gate/endshielding1/geometry/setRmin   362.5 mm 
+/gate/endshielding1/geometry/setHeight 25.0 mm
+/gate/endshielding1/setMaterial Lead
+/gate/endshielding1/vis/setColor yellow
+/gate/endshielding1/vis/forceSolid
+/gate/endshielding1/vis/setVisible 0
+
+# END SHIELDING 2
+/gate/world/daughters/name endshielding2
+/gate/world/daughters/insert cylinder
+/gate/endshielding2/placement/setTranslation 0.0 0.0 -95.0 mm
+/gate/endshielding2/geometry/setRmax   410.0 mm
+/gate/endshielding2/geometry/setRmin   362.5 mm 
+/gate/endshielding2/geometry/setHeight 25.0 mm
+/gate/endshielding2/setMaterial Lead
+/gate/endshielding2/vis/setColor yellow
+/gate/endshielding2/vis/forceSolid
+/gate/endshielding2/vis/setVisible 0
+
+# outer cover Lexan layer
+/gate/world/daughters/name cover
+/gate/world/daughters/insert cylinder
+/gate/cover/placement/setTranslation 0.0 0.0 0.0 cm
+/gate/cover/geometry/setRmax   355.5 mm
+/gate/cover/geometry/setRmin   354.0 mm
+/gate/cover/geometry/setHeight 392.0 mm
+/gate/cover/setMaterial Lexan
+/gate/cover/vis/forceSolid
+/gate/cover/vis/setColor white
+/gate/cover/vis/setVisible 0
+
+# ATTACH SYSTEM 
+# Depth of the readout segmentation
+# Depth 1 is the rsector which for the Alpha is the module
+# Depth 2 is the module which for the Alpha is the stack
+# Depth 3 is the submodules which for the Alpha is the die
+# Depth 4 is the crystal which for the Alpha is the crystal
+
+/gate/systems/cylindricalPET/rsector/attach module
+/gate/systems/cylindricalPET/module/attach stack
+/gate/systems/cylindricalPET/submodule/attach die
+/gate/systems/cylindricalPET/crystal/attach crystal
+
+# ATTACH LAYER SD (sensitive detector)
+/gate/crystal/attachCrystalSD

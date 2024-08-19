@@ -1,0 +1,23 @@
+
+# global stat
+/gate/actor/addActor  SimulationStatisticActor stat
+/gate/actor/stat/save output/stats2.txt
+
+# ROOT OUTPUT v1
+/gate/output/root/enable
+/gate/output/root/setFileName output/output2
+/gate/output/root/setRootNtupleFlag 0
+/gate/output/root/setRootHitFlag 1
+/gate/output/root/setRootSinglesFlag 1
+/gate/output/root/setSaveRndmFlag 0
+/gate/output/root/setRootRecordFlag 0
+/gate/output/root/setRootCoincidencesFlag 1
+/gate/output/root/setRootDelayFlag 1
+
+# Summary
+/gate/output/summary/enable
+/gate/output/summary/setFileName output/summary2.txt
+/gate/output/summary/addCollection Singles
+/gate/output/summary/addCollection Coincidences
+/gate/output/summary/addCollection Delay
+

@@ -1,0 +1,89 @@
+#.................... SCANNER DATA PROCESSING PARAMETERS
+#       ADDER
+# The adder output is a pulse that is an energy weighted centroid for the different hit positions within each crystal volume invlved in the event
+/gate/digitizer/Singles/insert adder
+#/gate/digitizer/Singles/adder/verbose 0
+#/gate/digitizer/convertor/verbose 0
+
+# READOUT
+
+# The redout regroups the pulsed per group of sensitive detectors
+# defined by the depth in the volume hierarchy. The energy is the
+# total energy in the stack and the position of the pulse with the
+# maximun energy.
+
+/gate/digitizer/Singles/insert readout
+/gate/digitizer/Singles/readout/setDepth 1
+
+
+# NOISE  
+
+/gate/distributions/name energy_distrib 
+/gate/distributions/insert Gaussian 
+/gate/distributions/energy_distrib/setMean 500 keV 
+/gate/distributions/energy_distrib/setSigma 1 keV
+
+/gate/distributions/name dt_distrib 
+/gate/distributions/insert Exponential 
+/gate/distributions/dt_distrib/setLambda 2.1701 us
+
+/gate/digitizer/Singles/insert noise 
+/gate/digitizer/Singles/noise/setDeltaTDistribution dt_distrib 
+/gate/digitizer/Singles/noise/setEnergyDistribution energy_distrib
+
+
+# ENERGY BLURRING
+/gate/digitizer/Singles/insert crystalblurring 
+/gate/digitizer/Singles/crystalblurring/setCrystalResolutionMin 0.112
+/gate/digitizer/Singles/crystalblurring/setCrystalResolutionMax 0.112
+/gate/digitizer/Singles/crystalblurring/setCrystalQE 0.865
+/gate/digitizer/Singles/crystalblurring/setCrystalEnergyOfReference 511. keV 
+
+
+# TEMPORAL RESOLUTION
+/gate/digitizer/Singles/insert timeResolution
+/gate/digitizer/Singles/timeResolution/setTimeResolution 220.0 ps
+/gate/digitizer/Singles/timeResolution/verbose 0
+
+
+# PILES-UP
+/gate/digitizer/Singles/insert pileup 
+/gate/digitizer/Singles/pileup/setDepth 1
+/gate/digitizer/Singles/pileup/setPileup 5.9 ns
+
+
+# DEADTIME
+/gate/digitizer/Singles/insert deadtime  
+/gate/digitizer/Singles/deadtime/setDeadTime 5.9 ns
+/gate/digitizer/Singles/deadtime/setMode paralysable
+/gate/digitizer/Singles/deadtime/chooseDTVolume module
+
+
+# HIGH ENERGY CUT  
+/gate/digitizer/Singles/insert thresholder  
+/gate/digitizer/Singles/thresholder/setThreshold 0.44968 MeV
+/gate/digitizer/Singles/insert upholder  
+/gate/digitizer/Singles/upholder/setUphold 0.61320 MeV
+
+
+# COINCIDENCES SORTER
+/gate/digitizer/Coincidences/setInputName Singles 
+#/gate/digitizer/Coincidences/verbose 0
+/gate/digitizer/Coincidences/setWindow 2.0115 ns
+/gate/digitizer/Coincidences/minSectorDifference 5
+/gate/digitizer/Coincidences/MultiplesPolicy takeAllGoods
+
+##Uncomment for second method for coincidence sorting
+/gate/digitizer/Coincidences/allPulseOpenCoincGate true
+
+/gate/digitizer/name Delay
+/gate/digitizer/insert coincidenceSorter
+/gate/digitizer/Delay/setInputName Singles
+/gate/digitizer/Delay/setWindow 2.0115 ns
+/gate/digitizer/Delay/setOffset 100.0 ns #... it should be 100 ns
+/gate/digitizer/Delay/minSectorDifference 5
+/gate/digitizer/Delay/MultiplesPolicy takeAllGoods
+
+##Uncomment for second method for coincidence sorting
+/gate/digitizer/Delay/allPulseOpenCoincGate true
+

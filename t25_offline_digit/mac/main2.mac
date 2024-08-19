@@ -1,0 +1,40 @@
+
+/control/execute mac/verbose.mac
+#/control/execute mac/visu.mac
+
+# GEOMETRY
+/gate/geometry/setMaterialDatabase data/GateMaterials_pet.db
+/control/execute mac/main2_pet_geometry.mac
+/control/execute mac/main2_table_geometry.mac
+/control/execute mac/main2_phantom_NECR.mac
+/control/execute mac/main2_pet_digitizer.mac
+
+# used to compute scatter counts
+/gate/phantom/attachPhantomSD
+/gate/cylinderScat/attachPhantomSD
+/gate/linearSourceIn/attachPhantomSD
+/gate/linearSourceOut/attachPhantomSD
+
+# PHYSICS
+/control/execute mac/main2_physics.mac
+
+# OUTPUT
+/control/execute mac/main2_pet_output.mac
+
+# INITIALISATION
+/gate/run/initialize
+
+# SOURCE
+/control/execute mac/main2_source_NECR.mac
+
+# START
+/gate/random/setEngineName MersenneTwister
+/gate/random/setEngineSeed auto
+/gate/application/setTimeStart 0 s
+/gate/application/setTimeSlice 0.00010 s
+/gate/application/setTimeStop  0.00010 s
+/gate/application/startDAQ
+
+# computation time estimation (2021)
+# PPS = 3000
+# with 1.78 GBq, 0.0001 s -> around 1 min, around 1300 prompts

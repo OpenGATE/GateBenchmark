@@ -1,0 +1,63 @@
+#  P H A N T O M   G E O M E T R Y
+
+# Cylinder 
+/gate/world/daughters/name               phantom
+/gate/world/daughters/insert             cylinder
+/gate/phantom/placement/setTranslation   0.0 0.0 0.0 cm
+/gate/phantom/geometry/setRmax           103 mm
+/gate/phantom/geometry/setRmin           0.0 cm
+/gate/phantom/geometry/setHeight         71 cm
+/gate/phantom/setMaterial                G4_AIR
+/gate/phantom/vis/forceWireframe
+/gate/phantom/vis/setColor               gray
+/gate/phantom/vis/setVisible             1
+
+
+# Cylinder 
+/gate/phantom/daughters/name                cylinderScat
+/gate/phantom/daughters/insert              cylinder
+/gate/cylinderScat/placement/setTranslation 0.0 0.0 0.0 cm
+/gate/cylinderScat/geometry/setRmax         102 mm
+/gate/cylinderScat/geometry/setRmin         0.0 cm
+/gate/cylinderScat/geometry/setHeight       70 cm
+/gate/cylinderScat/setMaterial              G4_POLYETHYLENE
+/gate/cylinderScat/vis/forceWireframe
+/gate/cylinderScat/vis/setColor             gray
+/gate/cylinderScat/vis/setVisible           1
+
+
+# Linear Source interior
+/gate/cylinderScat/daughters/name               linearSourceIn
+/gate/cylinderScat/daughters/insert             cylinder
+/gate/linearSourceIn/placement/setTranslation   0.0 -4.5 0.0 cm
+/gate/linearSourceIn/geometry/setRmin           0.0 mm
+/gate/linearSourceIn/geometry/setRmax           1.6 mm
+/gate/linearSourceIn/geometry/setHeight         70 cm
+/gate/linearSourceIn/setMaterial                G4_WATER
+/gate/linearSourceIn/vis/forceWireframe
+/gate/linearSourceIn/vis/setColor               red
+/gate/linearSourceIn/vis/setVisible             1
+
+# Linear Source Exterior
+/gate/cylinderScat/daughters/name               linearSourceOut
+/gate/cylinderScat/daughters/insert             cylinder
+/gate/linearSourceOut/placement/setTranslation  0.0 -4.5 0.0 cm
+/gate/linearSourceOut/geometry/setRmin          1.6 mm
+/gate/linearSourceOut/geometry/setRmax          2.5 mm
+/gate/linearSourceOut/geometry/setHeight        70 cm
+/gate/linearSourceOut/setMaterial               G4_POLYETHYLENE
+/gate/linearSourceOut/vis/forceWireframe
+/gate/linearSourceOut/vis/setColor              red
+/gate/linearSourceOut/vis/setVisible            0
+
+
+
+
+
+
+
+
+
+
+
+

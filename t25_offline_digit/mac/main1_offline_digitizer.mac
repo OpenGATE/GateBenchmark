@@ -1,0 +1,34 @@
+
+
+# Geometry is needed to identify layer with volumeID of hits and to perform operations with pulses
+/gate/geometry/setMaterialDatabase data/GateMaterials_pet.db
+/control/execute mac/PET_CylindricalPET_geom.mac
+
+
+/gate/digitizer/layers/insert adder
+
+#/gate/digitizer/layers/insert                        readout
+#/gate/digitizer/layers/readout/setDepth              1
+
+#/gate/digitizer/Singles/insert                        adder
+#/gate/digitizer/Singles/insert                        readout
+#/gate/digitizer/Singles/readout/setDepth              1
+
+/gate/digitizer/layers/insert                        blurring
+/gate/digitizer/layers/blurring/setResolution        0.26
+/gate/digitizer/layers/blurring/setEnergyOfReference 511. keV
+
+/gate/digitizer/layers/insert                        thresholder
+/gate/digitizer/layers/thresholder/setThreshold      350. keV
+/gate/digitizer/layers/insert                        upholder
+/gate/digitizer/layers/upholder/setUphold            650. keV
+
+# INITIALIZE is needed to recover volumeID from hits using DetectorConstruction
+/gate/run/initialize
+
+#=======================================================================
+#   how to include a R A N D O M   E N G I N E  A N D  S E E D for offline digitizer ???
+#=============================================================================================
+
+
+
