@@ -5,13 +5,14 @@
 #push: docker push tbaudier/gatebenchmarks
 #interactive: docker run -ti --rm -v $(Pipeline.Workspace)/software:/home tbaudier/gatebenchmarks /bin/bash
 
-FROM centos:7
+FROM rockylinux:8
 RUN yum install -y  make \
                     libX11-devel.x86_64 \
                     libXpm-devel.x86_64 \
                     libXft-devel.x86_64 \
                     libXext-devel.x86_64 \
                     libXmu-devel.x86_64 \
+                    libxml2-devel.x86_64 \
                     binutils \
                     qt5-qtbase-devel.x86_64 \
                     git \
@@ -19,20 +20,20 @@ RUN yum install -y  make \
                     unzip \
                     wget \
                     mesa-libGLU-devel.x86_64 \
-                    centos-release-scl \
+                    mesa-dri-drivers \
                     python3-devel \
                     which \
                     openssl-devel \
                     patch \
- && yum install -y devtoolset-7-gcc-c++
+                    findutils \
+                    procps \
+                    libjpeg-devel
 
 #create folder and install cmake
 RUN mkdir software \
  && cd software \
  && wget https://github.com/Kitware/CMake/releases/download/v3.18.4/cmake-3.18.4-Linux-x86_64.tar.gz \
  && tar xzvf cmake-3.18.4-Linux-x86_64.tar.gz \
- && echo "source /opt/rh/devtoolset-7/enable" >> /etc/mybashrc \
- && source /etc/mybashrc \
  && echo "export PATH=/software/cmake-3.18.4-Linux-x86_64/bin/:$PATH" >> /etc/mybashrc
 
 #Build root
@@ -54,7 +55,7 @@ RUN mkdir software/geant4 \
  && source /etc/mybashrc \
  && cd software/geant4 \
  && mkdir src bin install data \
- && git clone --branch v11.2.1 https://github.com/Geant4/geant4.git src \
+ && git clone --branch v11.3.0 https://github.com/Geant4/geant4.git src \
  && cd bin \
  && cmake ../src/ -DGEANT4_INSTALL_DATA=OFF \
                   -DGEANT4_INSTALL_DATADIR=/software/geant4/data \
@@ -70,32 +71,32 @@ RUN mkdir software/geant4 \
 #Separate to avoid to push large container
 RUN cd software/geant4 \
  && mkdir data \
- && wget https://cern.ch/geant4-data/datasets/G4NDL.4.7.tar.gz \
- && tar xzvf G4NDL.4.7.tar.gz \
+ && wget https://cern.ch/geant4-data/datasets/G4NDL.4.7.1.tar.gz \
+ && tar xzvf G4NDL.4.7.1.tar.gz \
  && rm -f G4*.tar.gz \
  && mv G4* data
 
 RUN cd software/geant4 \
- && wget https://cern.ch/geant4-data/datasets/G4EMLOW.8.5.tar.gz \
- && tar xzvf G4EMLOW.8.5.tar.gz \
+ && wget https://cern.ch/geant4-data/datasets/G4EMLOW.8.6.1.tar.gz \
+ && tar xzvf G4EMLOW.8.6.1.tar.gz \
  && rm -f G4*.tar.gz \
  && mv G4* data
 
 RUN cd software/geant4 \
- && wget https://cern.ch/geant4-data/datasets/G4PhotonEvaporation.5.7.tar.gz \
- && wget https://cern.ch/geant4-data/datasets/G4RadioactiveDecay.5.6.tar.gz \
+ && wget https://cern.ch/geant4-data/datasets/G4PhotonEvaporation.6.1.tar.gz \
+ && wget https://cern.ch/geant4-data/datasets/G4RadioactiveDecay.6.1.2.tar.gz \
  && wget https://cern.ch/geant4-data/datasets/G4RealSurface.2.2.tar.gz \
- && tar xzvf G4PhotonEvaporation.5.7.tar.gz \
- && tar xzvf G4RadioactiveDecay.5.6.tar.gz \
+ && tar xzvf G4PhotonEvaporation.6.1.tar.gz \
+ && tar xzvf G4RadioactiveDecay.6.1.2.tar.gz \
  && tar xzvf G4RealSurface.2.2.tar.gz \
  && rm -f G4*.tar.gz \
- && mv PhotonEvaporation5.7 RadioactiveDecay5.6 RealSurface2.2 data
+ && mv PhotonEvaporation* RadioactiveDecay* RealSurface* data
 
 RUN cd software/geant4 \
- && wget https://cern.ch/geant4-data/datasets/G4PARTICLEXS.4.0.tar.gz \
+ && wget https://cern.ch/geant4-data/datasets/G4PARTICLEXS.4.1.tar.gz \
  && wget https://cern.ch/geant4-data/datasets/G4PII.1.3.tar.gz \
  && wget https://cern.ch/geant4-data/datasets/G4SAIDDATA.2.0.tar.gz \
- && tar xzvf G4PARTICLEXS.4.0.tar.gz \
+ && tar xzvf G4PARTICLEXS.4.1.tar.gz \
  && tar xzvf G4PII.1.3.tar.gz \
  && tar xzvf G4SAIDDATA.2.0.tar.gz \
  && rm -f G4*.tar.gz \
@@ -104,10 +105,12 @@ RUN cd software/geant4 \
 RUN cd software/geant4 \
  && wget https://cern.ch/geant4-data/datasets/G4ABLA.3.3.tar.gz \
  && wget https://cern.ch/geant4-data/datasets/G4INCL.1.2.tar.gz \
- && wget https://cern.ch/geant4-data/datasets/G4ENSDFSTATE.2.3.tar.gz \
+ && wget https://cern.ch/geant4-data/datasets/G4ENSDFSTATE.3.0.tar.gz \
+ && wget https://cern.ch/geant4-data/datasets/G4CHANNELING.1.0.tar.gz \
  && tar xzvf G4ABLA.3.3.tar.gz \
  && tar xzvf G4INCL.1.2.tar.gz \
- && tar xzvf G4ENSDFSTATE.2.3.tar.gz \
+ && tar xzvf G4ENSDFSTATE.3.0.tar.gz \
+ && tar xzvf G4CHANNELING.1.0.tar.gz \
  && rm -f G4*.tar.gz \
  && mv G4* data
 

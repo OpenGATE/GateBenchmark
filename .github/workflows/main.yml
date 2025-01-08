@@ -78,5 +78,5 @@ jobs:
     - name: Run the test in docker
       run: |
         ls $GITHUB_WORKSPACE
-        docker run --rm -e "TEST=${{ matrix.strategy_name }}" -v $GITHUB_WORKSPACE:/home tbaudier/gatebenchmarks:9.4 /home/.github/workflows/runTest.sh
+        docker run --rm -e "TEST=${{ matrix.strategy_name }}" -v $GITHUB_WORKSPACE:/home tbaudier/gatebenchmarks:9.5 /home/.github/workflows/runTest.sh
 

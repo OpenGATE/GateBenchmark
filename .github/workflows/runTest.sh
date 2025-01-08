@@ -3,24 +3,22 @@
 set -e -x
 
 #yum updates
-yum install -y  libjpeg-devel
 if [ "$TEST" = "t15_optical" ] || [ "$TEST" = "t29_optical_digi" ]; then
    yum install -y  libxml2-devel
 fi
 
 #update python
-yum install -y rh-python38-python-devel rh-python38-python-pip.noarch
-rm /usr/bin/python /usr/bin/python3 /usr/bin/pip3
-ln -s /opt/rh/rh-python38/root/usr/bin/python /usr/bin/python
-ln -s /opt/rh/rh-python38/root/usr/bin/python3 /usr/bin/python3
+yum install -y python39-pip.noarch
+rm /usr/bin/python3 /usr/bin/pip3
+ln -s /bin/python3.9 /usr/bin/python
+ln -s /bin/python3.9 /usr/bin/python3
 python3 -m pip install --upgrade pip
-ln -s /opt/rh/rh-python38/root/usr/local/bin/pip3 /usr/bin/pip3
+ln -s /bin/pip3.9 /usr/bin/pip3
 which python3
 python3 --version
 
-source /opt/rh/devtoolset-7/enable
 #source /etc/mybashrc
-export PATH=/software/cmake-3.18.4-Linux-x86_64/bin/:/opt/rh/devtoolset-7/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export PATH=/software/cmake-3.18.4-Linux-x86_64/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 source /software/geant4/install/bin/geant4.sh
 source /software/root-cern/install/bin/thisroot.sh
 
@@ -85,7 +83,6 @@ cd ..
 source /etc/mybashrc
 echo 'export PATH=/software/gatetools/clustertools/:$PATH' >> /etc/mybashrc
 echo 'export PATH=/software/gate/bin:$PATH' >> /etc/mybashrc
-echo 'export PATH=/opt/rh/rh-python38/root/usr/local/bin/:$PATH' >> /etc/mybashrc
 echo 'export PATH=/software/gatetools/clustertools/:$PATH' >> /etc/mybashrc
 source /etc/mybashrc
 
@@ -93,7 +90,7 @@ source /etc/mybashrc
 cd /home/
 export LC_ALL=en_US.utf8
 export LANG=en_US.utf8
-pip3 install click colorama
+pip3 install click colorama "numpy<2.0.0"
 OutputTest=$(python3 runBenchmark.py -t ${TEST})
 echo "$OutputTest"
 OutputTest=$(echo "$OutputTest" | tail -1)
